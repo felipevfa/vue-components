@@ -5,7 +5,7 @@
                         :key="server.id" 
                         :id="server.id"
                         :status="server.status"
-                        :isDetailed="server.isDetailed" />
+                        :active="activeServer" />
         </ul>
     </div>
 </template>
@@ -18,12 +18,13 @@ export default {
     data: function() {
         return {
             servers: [
-                { id: 1, status: 'Normal', isDetailed: false },
-                { id: 2, status: 'Critical', isDetailed: false },
-                { id: 3, status: 'Unknown', isDetailed: false },
-                { id: 4, status: 'Normal', isDetailed: false },
-                { id: 5, status: 'Down', isDetailed: false }
-            ]
+                { id: 1, status: 'Normal' },
+                { id: 2, status: 'Critical' },
+                { id: 3, status: 'Unknown' },
+                { id: 4, status: 'Normal' },
+                { id: 5, status: 'Down' }
+            ],
+            activeServer: 0
         }
     },
     components: {
@@ -31,10 +32,38 @@ export default {
     },
     created() {
         eventBus.$on("setActiveServer", (serverId) => {
-            for (server in this.servers) {
-                if (server.id == serverId) server.isDetailed = true
-                else server.isDetailed = false
-            }
+            this.activeServer = serverId
+        }),
+        eventBus.$on("serverNormal", () => {
+            let server = this.servers[this.activeServer-1]
+            server.status = 'Normal'
+            eventBus.showDetails({ id: server.id, status: server.status })
+        }),
+        eventBus.$on("serverUnknown", () => {
+            let server = this.servers[this.activeServer-1]
+            server.status = 'Unknown'
+            eventBus.showDetails({ id: server.id, status: server.status })
+        }),
+        eventBus.$on("serverDisabled", () => {
+            let server = this.servers[this.activeServer-1]
+            server.status = 'Disabled'
+            eventBus.showDetails({ id: server.id, status: server.status })
+        }),
+        eventBus.$on("reset", () => {
+            let server = this.servers[this.activeServer-1]
+            server.status = 'Normal'
+            eventBus.showDetails({ id: server.id, status: server.status })
+        }),
+        eventBus.$on("reset", () => {
+            this.servers = [
+                                { id: 1, status: 'Normal' },
+                                { id: 2, status: 'Critical' },
+                                { id: 3, status: 'Unknown' },
+                                { id: 4, status: 'Normal' },
+                                { id: 5, status: 'Down' }
+                           ]
+            let server = this.servers[this.activeServer-1]
+            eventBus.showDetails({ id: server.id, status: server.status })
         })
     }
 }

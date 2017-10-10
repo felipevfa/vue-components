@@ -8,6 +8,18 @@ export const eventBus = new Vue({
     },
     setActive(serverId) {
       this.$emit("setActiveServer", serverId)
+    },
+    setNormal() {
+      this.$emit("serverNormal")
+    },
+    setUnknown() {
+      this.$emit("serverUnknown")
+    },
+    setDisabled() {
+      this.$emit("serverDisabled")
+    },
+    reset() {
+      this.$emit("reset")
     }
   }
 });

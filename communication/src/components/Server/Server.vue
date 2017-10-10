@@ -1,6 +1,6 @@
 <template>
   <li class="list-group-item" 
-      :class="{ 'bg-primary': isDetailed }"
+      :class="{ 'bg-primary': this.active == this.id }"
       @click="showServerDetails">Server #{{ id }}</li>
 </template>
 
@@ -11,7 +11,8 @@ export default {
     props: {
         id: Number,
         status: String,
-        isDetailed: Boolean
+        isDetailed: Boolean,
+        active: Number
     },
     methods: {
         showServerDetails() {
@@ -22,5 +23,7 @@ export default {
 </script>
 
 <style>
-
+.bg-primary {
+    background-color: #337ab7;
+}
 </style>
